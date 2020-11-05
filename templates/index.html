@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        :root {
+            --nav-height:81px;
+            --main-bg-color: brown;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .wrap {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav {
+            display: flex;
+            width: 80%;
+            margin:10px auto;
+            height: var(--nav-height);
+            background-color:darkseagreen ;
+            border-radius: 80px ;
+
+
+        }
+        .search-bar{
+            width: 80%;
+            margin:10px auto;
+            background-color:white ;
+        }
+
+        .content {
+            display: flex;
+            width: 1000px;
+            margin:auto;
+            height: calc(100% - var(--nav-height));
+
+        }
+
+        .main {
+            margin:10px 0;
+            background-color: darkseagreen;
+            width: 100%;
+            border-radius: 30px;
+
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="nav">
+        <div class="search-bar"></div>
+    </div>
+    <div class="content">
+        <div class="main"></div>
+    </div>
+</div>
+
+</body>
+</html>
