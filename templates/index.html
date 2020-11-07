@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Required meta tags -->
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <title>복덕방-당신의 새로운 보금자리를 소개해줄 부동산을 찾아보세요</title>
+
+
     <style>
         :root {
-            --nav-height:81px;
+            --nav-height: 81px;
             --main-bg-color: brown;
         }
 
         html, body {
             height: 100%;
             margin: 0;
+            font-family: 'Yeon Sung', cursive;
         }
 
         .wrap {
@@ -22,46 +42,171 @@
         }
 
         .nav {
-            display: flex;
-            width: 80%;
-            margin:10px auto;
-            height: var(--nav-height);
-            background-color:darkseagreen ;
-            border-radius: 80px ;
+            width: 100%;
+            height: 100px;
+            background-color: beige;
+
+        }
+
+        .logo {
+            position: absolute;
+            left: 10px;
+            top: 10px;
 
 
         }
-        .search-bar{
-            width: 80%;
-            margin:10px auto;
-            background-color:white ;
+
+        .search {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+
         }
 
         .content {
             display: flex;
             width: 1000px;
-            margin:auto;
+            margin: auto;
             height: calc(100% - var(--nav-height));
 
         }
 
         .main {
-            margin:10px 0;
+            margin: 10px 0;
             background-color: darkseagreen;
             width: 100%;
-            border-radius: 30px;
+            border-radius: 10px;
 
         }
+
+        h4 {
+            text-align: center;
+            display: block;
+            color: gray;
+            font-size: 50px;
+
+        }
+
+        img {
+            display: block;
+            margin: 50px auto;
+            opacity: 0.8;
+            width: 100px;
+            height: 100px;
+        }
     </style>
+    <script>
+
+        function showResult() {
+            $('#nodata').show()
+            $('#gu').empty()
+            $('#dong').empty()
+            $('#name').empty()
+
+            let opt = $('#order-count').val()
+            let keyword = $('#keyword').val()
+            $.ajax({
+                    type: "POST",
+                    url: "/land",
+                    data: {
+                        'opt': opt,
+                        'keyword': keyword
+                    },
+                    success: function (response) {
+                        let gus = response['gu']
+                        let dongs = response['dong']
+                        let names = response['name']
+                        let mode = response['mode']
+
+                        if (mode == 0) {
+                            for (let i = 0; i < gus.length; i++) {
+                                let gu = gus[i]
+                                let address = gu['address']
+                                let name = gu['name']
+                                let tel = gu['tel']
+                                let status = gu['status']
+                                let temp = `<div>${address} ${name} ${tel} ${status}</div>`
+                                $('#gu').append(temp)
+                                if(temp!=null)
+                                    $('#nodata').hide()
+
+                            }
+                            return
+                        } else if (mode == 1) {
+                            for (let i = 0; i < dongs.length; i++) {
+                                let dong = dongs[i]
+                                let address = dong['address']
+                                let name = dong['name']
+                                let tel = dong['tel']
+                                let status = dong['status']
+                                let temp = `<div>${address} ${name} ${tel} ${status}</div>`
+                                $('#dong').append(temp)
+                                if(temp!=null)
+                                    $('#nodata').hide()
+
+                            }
+                            return
+                        } else {
+                            for (let i = 0; i < names.length; i++) {
+                                let name = names[i]
+                                let address = name['address']
+                                let name2 = name['name']
+                                let tel = name['tel']
+                                let status = name['status']
+                                let temp = `<div>${address} ${name2} ${tel} ${status}</div>`
+                                $('#name').append(temp)
+                                if(temp!=null)
+                                    $('#nodata').hide()
+
+                            }
+                            return
+
+                        }
+
+
+                    }
+                }
+            )
+
+        }
+    </script>
 </head>
 <body>
 
 <div class="wrap">
+
+
     <div class="nav">
-        <div class="search-bar"></div>
+        <div class="logo">
+            <h1>복덕방</h1>
+        </div>
+        <div class="search">
+            <select class="form-control" id="order-count">
+                <option>구</option>
+                <option>동</option>
+                <option>부동산 이름</option>
+            </select>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" id=keyword type="text" placeholder="키워드 입력 ">
+                <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="showResult()">Search</button>
+
+
+            </form>
+        </div>
+
+
     </div>
     <div class="content">
-        <div class="main"></div>
+        <div class="main">
+            <div id="nodata">
+                <h4>검색된 부동산이 없습니다!</h4>
+                <img src="./static/house.png" alt="logo">
+            </div>
+
+            <div id="gu">구</div>
+            <div id="dong">동</div>
+            <div id="name">부동산 이름</div>
+        </div>
     </div>
 </div>
 
