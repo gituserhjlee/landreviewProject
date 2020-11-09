@@ -17,6 +17,7 @@ def show_result():
 
     filters = request.form['opt']
     keyword = request.form['keyword']
+    # list(db.dbmyproject.find({"$or":[{'gu': {'$regex':keyword}}, {'dong':{'$regex':keyword}},{'name':{'$regex':keyword}}]})) #필터없이 or로 검색할때
     if filters == '구':
         gu = list(db.dbmyproject.find({'gu': {'$regex': keyword}}, {'_id': False}))
         mode = 0
@@ -30,6 +31,10 @@ def show_result():
 
 
     return jsonify({'result': 'success', 'gu': gu, 'dong':dong, 'name':name, 'mode':mode})
+
+@app.route('/review.html')
+def show_review():
+    return render_template('review.html')
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

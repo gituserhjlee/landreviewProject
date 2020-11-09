@@ -23,10 +23,6 @@
 
 
     <style>
-        :root {
-            --nav-height: 81px;
-            --main-bg-color: brown;
-        }
 
         html, body {
             height: 100%;
@@ -43,7 +39,7 @@
 
         .nav {
             width: 100%;
-            height: 100px;
+            height: 15%;
             background-color: beige;
 
         }
@@ -54,6 +50,9 @@
             top: 10px;
 
 
+        }
+        h1{
+            color: darkseagreen;
         }
 
         .search {
@@ -67,22 +66,32 @@
             display: flex;
             width: 1000px;
             margin: auto;
-            height: calc(100% - var(--nav-height));
+            height: 85%;
 
         }
 
         .main {
             margin: 10px 0;
-            background-color: darkseagreen;
+            background-color: beige;
             width: 100%;
             border-radius: 10px;
-
+            overflow: scroll;
         }
 
+        .card{
+            margin:10px;
+        }
+        h3{
+            color: darkseagreen;
+            font-size: xx-large;
+        }
+        h3:hover{
+            color:gray;
+        }
         h4 {
             text-align: center;
             display: block;
-            color: gray;
+            color: darkseagreen;
             font-size: 50px;
 
         }
@@ -96,12 +105,22 @@
         }
     </style>
     <script>
+        $(document).ready(function () {
+            $('#keyword').keyup(function (event) {
+                if (event.which === 13) {
+                    showResult()
+                }
+            });
+        });
+
+        function showReview(){
+            window.open("review.html", "review", "width=400, height=200")
+        }
+
 
         function showResult() {
             $('#nodata').show()
-            $('#gu').empty()
-            $('#dong').empty()
-            $('#name').empty()
+            $('#landresult').empty()
 
             let opt = $('#order-count').val()
             let keyword = $('#keyword').val()
@@ -125,9 +144,19 @@
                                 let name = gu['name']
                                 let tel = gu['tel']
                                 let status = gu['status']
-                                let temp = `<div>${address} ${name} ${tel} ${status}</div>`
-                                $('#gu').append(temp)
-                                if(temp!=null)
+                                let temp = `
+                                <div class="card" >
+                                  <h3 class="card-header" onclick="showReview()">${name}</h3>
+                                  <div class="card-body">
+                                    <h5 class="card-title">${address}</h5>
+                                    <p class="card-text">${tel}</p>
+                                    <p class="card-text">${status}</p>
+
+                                  </div>
+                                </div>
+                                `
+                                $('#landresult').append(temp)
+                                if (temp != null)
                                     $('#nodata').hide()
 
                             }
@@ -139,9 +168,19 @@
                                 let name = dong['name']
                                 let tel = dong['tel']
                                 let status = dong['status']
-                                let temp = `<div>${address} ${name} ${tel} ${status}</div>`
-                                $('#dong').append(temp)
-                                if(temp!=null)
+                                let temp = `
+                                <div class="card">
+                                  <h3 class="card-header" onclick="showReview()">${name}</h3>
+                                  <div class="card-body">
+                                    <h5 class="card-title">${address}</h5>
+                                    <p class="card-text">${tel}</p>
+                                    <p class="card-text">${status}</p>
+
+                                  </div>
+                                </div>
+                                `
+                                $('#landresult').append(temp)
+                                if (temp != null)
                                     $('#nodata').hide()
 
                             }
@@ -153,9 +192,19 @@
                                 let name2 = name['name']
                                 let tel = name['tel']
                                 let status = name['status']
-                                let temp = `<div>${address} ${name2} ${tel} ${status}</div>`
-                                $('#name').append(temp)
-                                if(temp!=null)
+                                let temp = `
+                                <div class="card">
+                                  <h3 class="card-header" onclick="showReview()">${name2}</h3>
+                                  <div class="card-body">
+                                    <h5 class="card-title">${address}</h5>
+                                    <p class="card-text">${tel}</p>
+                                    <p class="card-text">${status}</p>
+
+                                  </div>
+                                </div>
+                                `
+                                $('#landresult').append(temp)
+                                if (temp != null)
                                     $('#nodata').hide()
 
                             }
@@ -186,9 +235,10 @@
                 <option>동</option>
                 <option>부동산 이름</option>
             </select>
-            <form class="form-inline">
+            <form class="form-inline" onsubmit="return false">
                 <input class="form-control mr-sm-2" id=keyword type="text" placeholder="키워드 입력 ">
-                <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="showResult()">Search</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="showResult()">Search
+                </button>
 
 
             </form>
@@ -203,9 +253,8 @@
                 <img src="./static/house.png" alt="logo">
             </div>
 
-            <div id="gu">구</div>
-            <div id="dong">동</div>
-            <div id="name">부동산 이름</div>
+            <div id="landresult"></div>
+
         </div>
     </div>
 </div>
