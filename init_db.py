@@ -28,7 +28,9 @@ def insert_info(url,index):
                                    'address': address,
                                    'name': name,
                                    'tel': tel,
-                                   'status': status})
+                                   'status': status,
+                                   'review' : 0
+                                   })
 
         index+=1
 

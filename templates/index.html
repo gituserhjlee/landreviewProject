@@ -41,6 +41,7 @@
             width: 100%;
             height: 15%;
             background-color: beige;
+            border: solid 2px plum;
 
         }
 
@@ -53,7 +54,13 @@
         }
 
         h1 {
-            color: darkseagreen;
+            margin: 10px;
+            padding: 10px;
+            color: darkgreen;
+            text-shadow: 4px 4px 0px darkseagreen, 8px 8px 0px grey;
+            background-color: plum;
+            border-radius: 10px;
+
         }
 
         .search {
@@ -69,6 +76,7 @@
             margin: auto;
             height: 85%;
 
+
         }
 
         .main {
@@ -81,6 +89,9 @@
 
         .card {
             margin: 10px;
+            border: solid 2px plum;
+            border-radius: 10px;
+
         }
 
         h3 {
@@ -96,6 +107,7 @@
             text-align: center;
             display: block;
             color: darkseagreen;
+            text-shadow: 2px 2px 0px grey;
             font-size: 50px;
 
         }
@@ -107,6 +119,27 @@
             width: 100px;
             height: 100px;
         }
+
+        #postbutton {
+            float: right;
+        }
+        .reviewBox{
+            padding: 5px;
+        }
+
+
+        .reviewcount {
+            color: darkseagreen;
+            float: right;
+        }
+
+        strong {
+            color: darkseagreen;
+        }
+
+        p {
+            font-size: 20px;
+        }
     </style>
     <script>
         $(document).ready(function () {
@@ -117,6 +150,9 @@
             });
         });
 
+        function reload() {
+            window.location.reload()
+        }
 
         function showReview(reviewId, reviewListId) {
             $('#' + reviewListId).empty()
@@ -154,18 +190,16 @@
 
         }
 
-        function postReview(reviewId, reviewBoxId) {
+        function postReview(uid, reviewId, reviewBoxId) {
             $('#' + reviewBoxId).empty()
 
             let storyId = reviewId + 'story'
             let temp =
                 `
-                <div class="reviewBox">
-                <label for="story">후기를 등록해보세요:</label>
-                <textarea id="${storyId}" name="story"
-                          rows="5" cols="33">
-                </textarea>
-                <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="createReview('${reviewId}','${storyId}')">등록</button>
+                <div class="reviewBox form-group">
+                <label for="${storyId}">후기를 등록해보세요:</label>
+                <textarea class="form-control" id="${storyId}" rows="3"></textarea>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="postbutton" type='button' onclick="createReview('${uid}','${reviewId}','${storyId}')">등록</button>
                 </div>
                 `
             $('#' + reviewBoxId).prepend(temp)
@@ -181,11 +215,12 @@
 
         }
 
-        function createReview(reviewId, storyId) {
+        function createReview(uid, reviewId, storyId) {
             $.ajax({
                 type: "POST",
                 url: "/review",
                 data: {
+                    'uid': uid,
                     'reviewId': reviewId,
                     'content': $('#' + storyId).val()
                 },
@@ -219,42 +254,45 @@
                         let dongs = response['dong']
                         let names = response['name']
                         let mode = response['mode']
-                        if(mode==0){
-                            datas=gus
-                        }
-                        else if(mode==1){
-                            datas=dongs
-                        }
-                        else{
-                            datas=names
+
+
+                        if (mode == 0) {
+                            datas = gus
+                        } else if (mode == 1) {
+                            datas = dongs
+                        } else {
+                            datas = names
                         }
 
-                            for (let i = 0; i < datas.length; i++) {
-                                let data = datas[i]
-                                let uid = data['uid']
-                                let reviewId = 'review' + uid
-                                let reviewBoxId = 'reviewBox' + uid
-                                let reviewListId = 'reviewList' + uid
-                                let address = data['address']
-                                let name = data['name']
-                                let tel = data['tel']
-                                let status = data['status']
-                                let temp = `
+                        for (let i = 0; i < datas.length; i++) {
+                            let data = datas[i]
+                            let count = data['review']
+                            let uid = data['uid']
+                            let reviewId = 'review' + uid
+                            let reviewBoxId = 'reviewBox' + uid
+                            let reviewListId = 'reviewList' + uid
+                            let address = data['address']
+                            let name = data['name']
+                            let tel = data['tel']
+                            let status = data['status']
+                            let temp = `
                                 <div class="card" id="${uid}" >
                                   <h3 class="card-header" onclick=" showReview('${reviewId}', '${reviewListId}')">${name}</h3>
                                   <div class="card-body">
-                                    <h5 class="card-title">${address}</h5>
-                                    <p class="card-text">${tel}</p>
-                                    <p class="card-text">${status}</p>
+                                    <p class="card-title"><strong>주소</strong>: ${address}</p>
+                                    <p class="card-text"><strong>연락처</strong>: ${tel}</p>
+                                    <p class="card-text"><strong>상태</strong>: ${status}</p>
+                                    <p class="card-text reviewcount">댓글수: ${count}</p>
+
                                     </div>
                                 </div>
                                 `
-                                let temp2 = `
+                            let temp2 = `
                                   <div class="card" id="${reviewId}">
                                   <div id="${reviewBoxId}"></div>
                                   <div class="card-header">
                                     ${name}에 달린 리뷰
-                                    <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="postReview('${reviewId}','${reviewBoxId}')">댓글등록</button>
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="postReview('${uid}','${reviewId}','${reviewBoxId}')">댓글등록</button>
 
                                   </div>
                                   <div id="${reviewListId}">
@@ -263,14 +301,14 @@
                                   </div>
 
                                 `
-                                $('#landresult').append(temp)
-                                $('#' + uid).append(temp2)
-                                $('#' + reviewId).hide()
-                                if (data != null)
-                                    $('#nodata').hide()
+                            $('#landresult').append(temp)
+                            $('#' + uid).append(temp2)
+                            $('#' + reviewId).hide()
+                            if (data != null)
+                                $('#nodata').hide()
 
-                            }
-                            return
+                        }
+                        return
 
                     }
                 }
@@ -288,7 +326,7 @@
 
     <div class="nav">
         <div class="logo">
-            <h1>복덕방</h1>
+            <h1 onclick="reload()">서울복덕방</h1>
         </div>
         <div class="search">
             <select class="form-control" id="order-count">
