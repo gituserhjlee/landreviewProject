@@ -32,9 +32,25 @@ def show_result():
 
     return jsonify({'result': 'success', 'gu': gu, 'dong':dong, 'name':name, 'mode':mode})
 
-@app.route('/review.html')
+
+@app.route('/review', methods=['POST'])
+def create_review():
+    reviewId=request.form['reviewId']
+    content=request.form['content']
+    db.dbmyprojectreview.insert_one(
+        {
+            'reviewId':reviewId,
+            'content':content
+        }
+    )
+    return jsonify({'result':'success', 'reviewId':reviewId, 'content':content})
+
+@app.route('/reviews', methods=['POST'])
 def show_review():
-    return render_template('review.html')
+    review = request.form['reviewId']
+    reviewList=list(db.dbmyprojectreview.find({'reviewId':review}, {'_id':False}))
+    print(reviewList)
+    return jsonify({'result':'success', 'reviewList':reviewList})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
