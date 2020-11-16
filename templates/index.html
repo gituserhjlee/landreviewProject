@@ -202,7 +202,7 @@
                 <div class="reviewBox form-group">
                 <label for="${storyId}">후기를 등록해보세요:</label>
                 <textarea class="form-control" id="${storyId}" rows="3"></textarea>
-                <button class="btn btn-outline-success my-2 my-sm-0" id="postbutton" type='button' onclick="createReview('${uid}','${reviewId}','${storyId}', '${countId}','${count}')">등록</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="postbutton" type='button' onclick="createReview('${uid}','${reviewId}','${storyId}', '${countId}')">등록</button>
                 </div>
                 `
             $('#' + reviewBoxId).prepend(temp)
@@ -218,7 +218,7 @@
 
         }
 
-        function createReview(uid, reviewId, storyId, countId,count) {
+        function createReview(uid, reviewId, storyId, countId) {
             $.ajax({
                 type: "POST",
                 url: "/review",
@@ -228,11 +228,12 @@
                     'content': $('#' + storyId).val()
                 },
                 success: function (response) {
+                    let count=response['count']['review']
+                    console.log(count)
                     $('#' + storyId).val('')
                     $('.reviewBox').hide()
                     $('#' + reviewId).hide()
-                    count=parseInt(count)+1
-                    $('#'+countId).text("댓글수: "+count)
+                    $('#'+countId).text("댓글수: "+ count)
 
                 }
 

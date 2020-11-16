@@ -50,8 +50,8 @@ def create_review():
         }
     )
     db.dbmyproject.update_one({'uid': uid}, {'$inc': {'review': 1}})
-
-    return jsonify({'result':'success', 'reviewId':reviewId, 'content':content})
+    count=db.dbmyproject.find_one({'uid':uid}, {'_id':False})
+    return jsonify({'result':'success', 'reviewId':reviewId, 'content':content, 'count':count})
 
 @app.route('/reviews', methods=['POST'])
 def show_review():
