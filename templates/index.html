@@ -46,6 +46,8 @@
         }
 
         .logo {
+            display: flex;
+            margin: 10px;
             position: absolute;
             left: 10px;
             top: 10px;
@@ -54,12 +56,13 @@
         }
 
         h1 {
-            margin: 10px;
-            padding: 10px;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
             color: darkgreen;
-            text-shadow: 4px 4px 0px darkseagreen, 8px 8px 0px grey;
-            background-color: plum;
-            border-radius: 10px;
+            text-shadow: 4px 4px 0px darkseagreen;
+            border-radius: 40px 40px 80px 80px;
+            border:solid 5px plum;
 
         }
 
@@ -190,7 +193,7 @@
 
         }
 
-        function postReview(uid, reviewId, reviewBoxId) {
+        function postReview(uid, reviewId, reviewBoxId, countId,count) {
             $('#' + reviewBoxId).empty()
 
             let storyId = reviewId + 'story'
@@ -199,7 +202,7 @@
                 <div class="reviewBox form-group">
                 <label for="${storyId}">후기를 등록해보세요:</label>
                 <textarea class="form-control" id="${storyId}" rows="3"></textarea>
-                <button class="btn btn-outline-success my-2 my-sm-0" id="postbutton" type='button' onclick="createReview('${uid}','${reviewId}','${storyId}')">등록</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="postbutton" type='button' onclick="createReview('${uid}','${reviewId}','${storyId}', '${countId}','${count}')">등록</button>
                 </div>
                 `
             $('#' + reviewBoxId).prepend(temp)
@@ -215,7 +218,7 @@
 
         }
 
-        function createReview(uid, reviewId, storyId) {
+        function createReview(uid, reviewId, storyId, countId,count) {
             $.ajax({
                 type: "POST",
                 url: "/review",
@@ -228,6 +231,8 @@
                     $('#' + storyId).val('')
                     $('.reviewBox').hide()
                     $('#' + reviewId).hide()
+                    count=parseInt(count)+1
+                    $('#'+countId).text("댓글수: "+count)
 
                 }
 
@@ -271,6 +276,7 @@
                             let reviewId = 'review' + uid
                             let reviewBoxId = 'reviewBox' + uid
                             let reviewListId = 'reviewList' + uid
+                            let countId='count'+uid
                             let address = data['address']
                             let name = data['name']
                             let tel = data['tel']
@@ -282,7 +288,7 @@
                                     <p class="card-title"><strong>주소</strong>: ${address}</p>
                                     <p class="card-text"><strong>연락처</strong>: ${tel}</p>
                                     <p class="card-text"><strong>상태</strong>: ${status}</p>
-                                    <p class="card-text reviewcount">댓글수: ${count}</p>
+                                    <p class="card-text reviewcount" id="${countId}">댓글수: ${count}</p>
 
                                     </div>
                                 </div>
@@ -292,7 +298,7 @@
                                   <div id="${reviewBoxId}"></div>
                                   <div class="card-header">
                                     ${name}에 달린 리뷰
-                                    <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="postReview('${uid}','${reviewId}','${reviewBoxId}')">댓글등록</button>
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="postReview('${uid}','${reviewId}','${reviewBoxId}', '${countId}','${count}')">댓글등록</button>
 
                                   </div>
                                   <div id="${reviewListId}">
