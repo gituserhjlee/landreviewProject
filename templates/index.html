@@ -38,48 +38,48 @@
         }
 
         .nav {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
             width: 100%;
-            height: 15%;
+            height: 20%;
             background-color: beige;
             border: solid 2px plum;
 
         }
 
-        .logo {
+        .left {
             display: flex;
-            margin: 10px;
-            position: absolute;
-            left: 10px;
-            top: 10px;
+            justify-content: flex-start;
+            align-items: center;
+            width: 50%;
 
 
         }
 
-        h1 {
-            justify-content: center;
+        .right {
+            display: flex;
+            justify-content: flex-end;
             align-items: center;
-            padding: 15px;
-            color: darkgreen;
-            text-shadow: 4px 4px 0px darkseagreen;
-            border-radius: 40px 40px 80px 80px;
-            border:solid 5px plum;
-
+            width: 50%;
         }
 
         .search {
-            position: absolute;
-            right: 10px;
-            top: 10px;
 
+            width: 30%;
+            margin: 20px;
+
+        }
+        button{
+            float:right;
         }
 
         .content {
             display: flex;
             width: 1000px;
             margin: auto;
-            height: 85%;
-
-
+            height: 75%;
         }
 
         .main {
@@ -94,6 +94,27 @@
             margin: 10px;
             border: solid 2px plum;
             border-radius: 10px;
+
+        }
+        .card-header{
+            border-top: 2px solid plum;
+        }
+
+
+        h1 {
+            padding: 15px;
+            margin-left: 20px;
+            color: darkgreen;
+            text-shadow: 3px 3px 0px darkseagreen;
+            border-radius: 40px 40px 80px 80px;
+            border: solid 5px plum;
+
+        }
+
+        h2 {
+            text-align: center;
+            display: block;
+            font-size: 25px;
 
         }
 
@@ -115,6 +136,7 @@
 
         }
 
+
         img {
             display: block;
             margin: 50px auto;
@@ -126,10 +148,13 @@
         #postbutton {
             float: right;
         }
-        .reviewBox{
+
+        .reviewBox {
             padding: 5px;
         }
-
+        .reviewintroduce{
+            font-size: 25px;
+        }
 
         .reviewcount {
             color: darkseagreen;
@@ -142,6 +167,22 @@
 
         p {
             font-size: 20px;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            border: 2px solid #4e484e;
+            background-color: #4E484E;
+
+
+        }
+
+        footer p {
+            font-size: small;
+            color: whitesmoke;
+            font-family: "Agency FB ";
+
         }
     </style>
     <script>
@@ -175,13 +216,9 @@
                         let temp = `
                         <li class="list-group-item">${content}</li>
                         `
-
                         $('#' + reviewListId).append(temp)
-
                     }
-
                 }
-
             })
             if ($('#' + reviewId).css("display") == "flex") {
                 $('#' + reviewId).hide()
@@ -193,32 +230,22 @@
 
         }
 
-        function postReview(uid, reviewId, reviewBoxId, countId,count) {
-            $('#' + reviewBoxId).empty()
-
-            let storyId = reviewId + 'story'
-            let temp =
-                `
-                <div class="reviewBox form-group">
-                <label for="${storyId}">후기를 등록해보세요:</label>
-                <textarea class="form-control" id="${storyId}" rows="3"></textarea>
-                <button class="btn btn-outline-success my-2 my-sm-0" id="postbutton" type='button' onclick="createReview('${uid}','${reviewId}','${storyId}', '${countId}')">등록</button>
-                </div>
-                `
-            $('#' + reviewBoxId).prepend(temp)
+        function postReview(uid, reviewId, reviewBoxId) {
 
             if ($('#' + reviewBoxId).css('display') == 'block') {
                 $('#' + reviewBoxId).hide()
+                console.log('리뷰박스 사라짐 ')
 
             } else {
                 $('#' + reviewBoxId).show()
+                console.log('리뷰박스 보여짐  ')
 
 
             }
 
         }
 
-        function createReview(uid, reviewId, storyId, countId) {
+        function createReview(uid, reviewId, storyId, countId, reviewBoxId) {
             $.ajax({
                 type: "POST",
                 url: "/review",
@@ -228,12 +255,11 @@
                     'content': $('#' + storyId).val()
                 },
                 success: function (response) {
-                    let count=response['count']['review']
-                    console.log(count)
+                    let count = response['count']['review']
                     $('#' + storyId).val('')
-                    $('.reviewBox').hide()
+                    $('#' + reviewBoxId).hide()
                     $('#' + reviewId).hide()
-                    $('#'+countId).text("댓글수: "+ count)
+                    $('#' + countId).text("댓글수: " + count)
 
                 }
 
@@ -277,7 +303,8 @@
                             let reviewId = 'review' + uid
                             let reviewBoxId = 'reviewBox' + uid
                             let reviewListId = 'reviewList' + uid
-                            let countId='count'+uid
+                            let countId = 'count' + uid
+                            let storyId = reviewId + 'story'
                             let address = data['address']
                             let name = data['name']
                             let tel = data['tel']
@@ -298,8 +325,8 @@
                                   <div class="card" id="${reviewId}">
                                   <div id="${reviewBoxId}"></div>
                                   <div class="card-header">
-                                    ${name}에 달린 리뷰
-                                    <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="postReview('${uid}','${reviewId}','${reviewBoxId}', '${countId}','${count}')">댓글등록</button>
+                                    <div class="reviewintroduce">${name}에 달린 리뷰</div>
+                                    <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="postReview('${uid}','${reviewId}','${reviewBoxId}')">댓글등록</button>
 
                                   </div>
                                   <div id="${reviewListId}">
@@ -308,9 +335,20 @@
                                   </div>
 
                                 `
+                            let temp3 =
+                                `
+                                <div class="reviewBox form-group">
+                                <label for="${storyId}">후기를 등록해보세요:</label>
+                                <textarea class="form-control" id="${storyId}" rows="3"></textarea>
+                                <button class="btn btn-outline-success my-2 my-sm-0" id="postbutton" type='button' onclick="createReview('${uid}','${reviewId}','${storyId}', '${countId}','${reviewBoxId}')">등록</button>
+                                </div>
+                                `
+
                             $('#landresult').append(temp)
                             $('#' + uid).append(temp2)
+                            $('#' + reviewBoxId).prepend(temp3)
                             $('#' + reviewId).hide()
+                            $('#' + reviewBoxId).hide()
                             if (data != null)
                                 $('#nodata').hide()
 
@@ -332,22 +370,24 @@
 
 
     <div class="nav">
-        <div class="logo">
+        <div class="left">
             <h1 onclick="reload()">서울복덕방</h1>
         </div>
-        <div class="search">
-            <select class="form-control" id="order-count">
-                <option>구</option>
-                <option>동</option>
-                <option>부동산 이름</option>
-            </select>
-            <form class="form-inline" onsubmit="return false">
-                <input class="form-control mr-sm-2" id=keyword type="text" placeholder="키워드 입력 ">
-                <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="showResult()">Search
-                </button>
+        <div class="right">
+            <div class="search">
+                <select class="form-control" id="order-count">
+                    <option>구</option>
+                    <option>동</option>
+                    <option>부동산 이름</option>
+                </select>
+                <form onsubmit="return false">
+                    <input class="form-control" id=keyword type="text" placeholder="키워드 입력 ">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type='button' onclick="showResult()">Search
+                    </button>
 
 
-            </form>
+                </form>
+            </div>
         </div>
 
 
@@ -357,12 +397,19 @@
             <div id="nodata">
                 <h4>검색된 부동산이 없습니다!</h4>
                 <img src="./static/house.png" alt="logo">
+                <h2>서울지역 부동산 후기 공유 사이트 '서울복덕방'에 오신 것을 환영합니다
+                    <br>부동산 검색 결과는 댓글 순으로 보여집니다 </h2>
             </div>
 
             <div id="landresult"></div>
 
         </div>
     </div>
+    <footer>
+        <p>Email : lhj5426@naver.com </p>
+        <p>Copyright 2020. All rights reserved | Lee Hyeonji</p>
+
+    </footer>
 </div>
 
 </body>
