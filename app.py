@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -43,19 +44,21 @@ def create_review():
     uid=int(request.form['uid'])
     reviewId=request.form['reviewId']
     content=request.form['content']
+    time=datetime.now()
     db.dbmyprojectreview.insert_one(
         {
             'reviewId':reviewId,
-            'content':content
+            'content':content,
+            'last_modified':time,
         }
     )
     db.dbmyproject.update_one({'uid': uid}, {'$inc': {'review': 1}})
     count=db.dbmyproject.find_one({'uid':uid}, {'_id':False})
     return jsonify({'result':'success', 'reviewId':reviewId, 'content':content, 'count':count})
 
-@app.route('/reviews', methods=['POST'])
+@app.route('/reviews', methods=['GET'])
 def show_review():
-    review = request.form['reviewId']
+    review=request.args.get('reviewId')
     reviewList=list(db.dbmyprojectreview.find({'reviewId':review}, {'_id':False}))
     return jsonify({'result':'success', 'reviewList':reviewList})
 

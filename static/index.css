@@ -1,0 +1,174 @@
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Yeon Sung', cursive;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 20%;
+    background-color: beige;
+    border: solid 2px plum;
+
+}
+
+.left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 50%;
+
+
+}
+
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 50%;
+}
+
+.search {
+
+    width: 30%;
+    margin: 20px;
+
+}
+
+button {
+    float: right;
+}
+
+.content {
+    display: flex;
+    width: 1000px;
+    margin: auto;
+    height: 75%;
+}
+
+.main {
+    margin: 10px 0;
+    background-color: beige;
+    width: 100%;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+.card {
+    margin: 10px;
+    border: solid 2px plum;
+    border-radius: 10px;
+
+}
+
+.card-header {
+    border-top: 2px solid plum;
+}
+
+
+h1 {
+    padding: 15px;
+    margin-left: 20px;
+    color: darkgreen;
+    text-shadow: 3px 3px 0px darkseagreen;
+    border-radius: 40px 40px 80px 80px;
+    border: solid 5px plum;
+
+}
+
+h1:hover {
+    border: solid 5px palevioletred;
+}
+
+h2 {
+    text-align: center;
+    display: block;
+    font-size: 25px;
+
+}
+
+h3 {
+    color: darkseagreen;
+    font-size: xx-large;
+}
+
+h3:hover {
+    color: white;
+    background-color: darkseagreen;
+}
+
+h4 {
+    text-align: center;
+    display: block;
+    color: darkseagreen;
+    text-shadow: 2px 2px 0px grey;
+    font-size: 50px;
+
+}
+
+
+img {
+    display: block;
+    margin: 50px auto;
+    opacity: 0.8;
+    width: 100px;
+    height: 100px;
+}
+
+#postbutton {
+    float: right;
+}
+
+.reviewBox {
+    padding: 5px;
+}
+
+.reviewintroduce {
+    font-size: 25px;
+}
+
+.reviewcount {
+    color: darkseagreen;
+    float: right;
+}
+.timestamp{
+    float:right;
+    font-size: smaller;
+    color: gray;
+}
+
+strong {
+    color: darkseagreen;
+}
+
+p {
+    font-size: 20px;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    border: 2px solid #4e484e;
+    background-color: #4E484E;
+
+
+}
+
+footer p {
+    font-size: small;
+    color: whitesmoke;
+    font-family: "Agency FB ";
+
+}
