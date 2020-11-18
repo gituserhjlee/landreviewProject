@@ -71,8 +71,9 @@
             margin: 20px;
 
         }
-        button{
-            float:right;
+
+        button {
+            float: right;
         }
 
         .content {
@@ -96,7 +97,8 @@
             border-radius: 10px;
 
         }
-        .card-header{
+
+        .card-header {
             border-top: 2px solid plum;
         }
 
@@ -109,6 +111,10 @@
             border-radius: 40px 40px 80px 80px;
             border: solid 5px plum;
 
+        }
+
+        h1:hover {
+            border: solid 5px palevioletred;
         }
 
         h2 {
@@ -124,7 +130,8 @@
         }
 
         h3:hover {
-            color: gray;
+            color: white;
+            background-color: darkseagreen;
         }
 
         h4 {
@@ -152,7 +159,8 @@
         .reviewBox {
             padding: 5px;
         }
-        .reviewintroduce{
+
+        .reviewintroduce {
             font-size: 25px;
         }
 
@@ -246,6 +254,11 @@
         }
 
         function createReview(uid, reviewId, storyId, countId, reviewBoxId) {
+            if ($('#' + storyId).val().replace(/\s | /gi, "").length == 0) {
+                alert('내용을 입력해주세요')
+                $('#' + storyId).focus()
+                return
+            }
             $.ajax({
                 type: "POST",
                 url: "/review",
