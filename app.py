@@ -1,10 +1,10 @@
 from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request
-from datetime import datetime
+import datetime
 
 app = Flask(__name__)
 
-client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@localhost', 27017)
 db = client.dbmyproject
 
 @app.route('/')
@@ -44,7 +44,8 @@ def create_review():
     uid=int(request.form['uid'])
     reviewId=request.form['reviewId']
     content=request.form['content']
-    time=datetime.now()
+    time=datetime.datetime.now()
+    time=time+datetime.timedelta(hours=9)
     db.dbmyprojectreview.insert_one(
         {
             'reviewId':reviewId,
