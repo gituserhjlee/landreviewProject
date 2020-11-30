@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+<!-- content -->
+{% block content %}
+<h1 class="header">Sign Up</h1>
+<div class="body">
+    <!-- ID -->
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text label">ID</span>
+        </div>
+        <input type="text" class="form-control" id="id" placeholder="please enter your id" aria-label="id"
+               aria-describedby="id">
+    </div>
+    <!-- PW -->
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text label">PW</span>
+        </div>
+        <input type="password" class="form-control" id="pw" placeholder="please enter your password" aria-label="pw"
+               aria-describedby="pw">
+    </div>
+    <!-- Nickname -->
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text label">Nickname</span>
+        </div>
+        <input type="text" class="form-control" id="nickname" placeholder="please enter your nickname" aria-label="pw"
+               aria-describedby="nickname">
+    </div>
+</div>
+<div class="footer">
+    <!-- Sign Up -->
+    <button class="btn btn-primary sign-up" onclick="signUp()">Sign Up</button>
+</div>
+{% endblock %}
+
+<!-- style -->
+{% block style %}
+<style>
+    .header {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .body {
+        margin: 32px 0;
+    }
+
+    .sign-up {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+
+    .footer {
+        text-align: right;
+    }
+
+    .label {
+        width: 90px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+
+<!-- script -->
+{% block script %}
+<script>
+    function signUp() {
+        let id = $('#id').val()
+        let pw = $('#pw').val()
+        let nickname = $('#nickname').val()
+
+        if (id === '') return alert('please write your id')
+        if (pw === '') return alert('please write your password')
+        if (nickname === '') return alert('please write your nickname')
+
+        $.ajax({
+            type: "POST",
+            url: "/api/register",
+            data: {id_give: id, pw_give: pw, nickname_give: nickname},
+            success: function (response) {
+                if (response['result'] === 'success') {
+                    alert('🎉 Sign up is complete 🎉')
+                    location.href = '/login'
+                } else {
+                    alert(response['msg'])
+                }
+            }
+        })
+    }
+</script>
+{% endblock %}
