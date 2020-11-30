@@ -148,7 +148,10 @@ img {
     font-size: smaller;
     color: gray;
 }
-
+.deletereview{
+    float:right;
+    color: gray;
+}
 strong {
     color: darkseagreen;
 }

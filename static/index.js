@@ -10,7 +10,7 @@ function reload() {
     window.location.reload()
 }
 
-function showReview(reviewId, reviewListId) {
+function showReview(uid,reviewId, reviewListId) {
     $('#' + reviewListId).empty()
 
     $.ajax({
@@ -25,9 +25,11 @@ function showReview(reviewId, reviewListId) {
                 let list = lists[i]
                 let content = list['content']
                 let time=list['last_modified']
+                let reviewuid=list['reviewuid']
                 let temp = `
                             <li style="white-space:pre;" class="list-group-item">${content} 
-                            <div class="timestamp">${time}</div></li>                     
+                            <div class="timestamp">${time}</div>   
+                            <div class="deletereview" onclick="deleteReview(${uid},${reviewuid})">삭제</div></li>                  
                         `
                 $('#' + reviewListId).append(temp)
             }
@@ -40,6 +42,21 @@ function showReview(reviewId, reviewListId) {
 
     }
 
+
+}
+function deleteReview(uid,reviewuid){
+    $.ajax({
+        type: "DELETE",
+        url: "/deleteReview",
+        data: {
+            'uid':uid,
+            'reviewuid': reviewuid,
+        },
+        success: function (response){
+            reload()
+            alert('댓글이 삭제되었습니다')
+        }
+    })
 
 }
 
@@ -128,7 +145,7 @@ function showResult() {
                     let status = data['status']
                     let temp = `
                                 <div class="card" id="${uid}" >
-                                  <h3 class="card-header" onclick=" showReview('${reviewId}', '${reviewListId}')">${name}</h3>
+                                  <h3 class="card-header" onclick=" showReview('${uid}','${reviewId}', '${reviewListId}')">${name}</h3>
                                   <div class="card-body">
                                     <p class="card-title"><strong>주소</strong>: ${address}</p>
                                     <p class="card-text"><strong>연락처</strong>: ${tel}</p>

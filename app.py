@@ -4,9 +4,9 @@ import datetime
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb://test:test@localhost', 27017)
+client = MongoClient('localhost', 27017)
 db = client.dbmyproject
-
+index=0
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -41,13 +41,19 @@ def show_result():
 
 @app.route('/review', methods=['POST'])
 def create_review():
+
     uid=int(request.form['uid'])
+    global index
+    reviewuid = index
+    index+=1
     reviewId=request.form['reviewId']
     content=request.form['content']
     time=datetime.datetime.now()
     time=time+datetime.timedelta(hours=9)
+
     db.dbmyprojectreview.insert_one(
         {
+            'reviewuid':reviewuid,
             'reviewId':reviewId,
             'content':content,
             'last_modified':time,
@@ -62,6 +68,17 @@ def show_review():
     review=request.args.get('reviewId')
     reviewList=list(db.dbmyprojectreview.find({'reviewId':review}, {'_id':False}))
     return jsonify({'result':'success', 'reviewList':reviewList})
+
+@app.route('/deleteReview',methods=['DELETE'])
+def delete_review():
+    uid=int(request.form['uid'])
+    reviewuid=int(request.form['reviewuid'])
+    print(uid,reviewuid)
+
+    db.dbmyprojectreview.delete_one({'reviewuid': reviewuid})
+    db.dbmyproject.update_one({'uid': uid}, {'$inc': {'review': -1}})
+
+    return jsonify({'result':'success'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
