@@ -43,7 +43,7 @@ def login_required(f):
 @app.route('/')
 @login_required
 def home():
-    return render_template('index.html')
+    return render_template('index.html',data=g.user['nick'])
 
 @app.route('/login')
 def login():
@@ -86,8 +86,9 @@ def api_login():
             'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=10)  # 만료 시간 (10초 뒤 만료)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
+        g.user = db.user.find_one({'id': payload["id"]})
 
-        return jsonify({'result': 'success', 'token': token})
+        return jsonify({'result': 'success', 'token': token, 'user':g.user['nick']})
     else:
         return jsonify({'result': 'fail', 'msg': 'Please check your id and password 😓'})
 
@@ -130,21 +131,26 @@ def show_result():
 @app.route('/review', methods=['POST'])
 def create_review():
 
-    uid=int(request.form['uid'])
+
     global index
     reviewuid = index
     index+=1
+    uid=int(request.form['uid'])
+    user=request.form['user']
     reviewId=request.form['reviewId']
     content=request.form['content']
+
     time=datetime.datetime.now()
     time=time+datetime.timedelta(hours=9)
 
     db.dbmyprojectreview.insert_one(
         {
+
             'reviewuid':reviewuid,
             'reviewId':reviewId,
             'content':content,
             'last_modified':time,
+            'usernickname':user
         }
     )
     db.dbmyproject.update_one({'uid': uid}, {'$inc': {'review': 1}})
@@ -161,7 +167,6 @@ def show_review():
 def delete_review():
     uid=int(request.form['uid'])
     reviewuid=int(request.form['reviewuid'])
-    print(uid,reviewuid)
 
     db.dbmyprojectreview.delete_one({'reviewuid': reviewuid})
     db.dbmyproject.update_one({'uid': uid}, {'$inc': {'review': -1}})

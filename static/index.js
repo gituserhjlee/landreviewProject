@@ -26,12 +26,25 @@ function showReview(uid,reviewId, reviewListId) {
                 let content = list['content']
                 let time=list['last_modified']
                 let reviewuid=list['reviewuid']
-                let temp = `
+                let user=list['usernickname']
+                if(user===document.cookie.split(';')[0].split('=')[1]) {
+                    let temp = `
                             <li style="white-space:pre;" class="list-group-item">${content} 
                             <div class="timestamp">${time}</div>   
                             <div class="deletereview" onclick="deleteReview(${uid},${reviewuid})">삭제</div></li>                  
                         `
-                $('#' + reviewListId).append(temp)
+                                    $('#' + reviewListId).append(temp)
+
+                }
+                else{
+                    let temp = `
+                            <li style="white-space:pre;" class="list-group-item">${content} 
+                            <div class="timestamp">${time}</div> 
+                            `
+                                    $('#' + reviewListId).append(temp)
+
+                }
+                // $('#' + reviewListId).append(temp)
             }
         }
     })
@@ -45,6 +58,7 @@ function showReview(uid,reviewId, reviewListId) {
 
 }
 function deleteReview(uid,reviewuid){
+
     $.ajax({
         type: "DELETE",
         url: "/deleteReview",
@@ -85,7 +99,8 @@ function createReview(uid, reviewId, storyId, countId, reviewBoxId) {
         data: {
             'uid': uid,
             'reviewId': reviewId,
-            'content': $('#' + storyId).val()
+            'content': $('#' + storyId).val(),
+            'user':document.cookie.split(';')[0].split('=')[1]
         },
         success: function (response) {
             alert('등록되었습니다')
