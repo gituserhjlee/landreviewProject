@@ -9,12 +9,13 @@ $(document).ready(function () {
 function reload() {
     window.location.reload()
 }
-function logout(){
-    document.cookie='token_give=None'
+
+function logout() {
+    document.cookie = 'token_give=None'
     reload()
 }
 
-function showReview(uid,reviewId, reviewListId) {
+function showReview(uid, reviewId, reviewListId) {
     $('#' + reviewListId).empty()
 
     $.ajax({
@@ -28,24 +29,23 @@ function showReview(uid,reviewId, reviewListId) {
             for (let i = 0; i < lists.length; i++) {
                 let list = lists[i]
                 let content = list['content']
-                let time=list['last_modified']
-                let reviewuid=list['reviewuid']
-                let user=list['usernickname']
-                if(user===document.cookie.split(';')[0].split('=')[1]) {
+                let time = list['last_modified']
+                let reviewuid = list['reviewuid']
+                let user = list['usernickname']
+                if (user === document.cookie.split(';')[0].split('=')[1]) {
                     let temp = `
                             <li style="white-space:pre;" class="list-group-item">${content} 
                             <div class="timestamp">${time}</div>   
                             <div class="deletereview" onclick="deleteReview(${uid},${reviewuid})">삭제</div></li>                  
                         `
-                                    $('#' + reviewListId).append(temp)
+                    $('#' + reviewListId).append(temp)
 
-                }
-                else{
+                } else {
                     let temp = `
                             <li style="white-space:pre;" class="list-group-item">${content} 
                             <div class="timestamp">${time}</div> 
                             `
-                                    $('#' + reviewListId).append(temp)
+                    $('#' + reviewListId).append(temp)
 
                 }
             }
@@ -60,16 +60,17 @@ function showReview(uid,reviewId, reviewListId) {
 
 
 }
-function deleteReview(uid,reviewuid){
+
+function deleteReview(uid, reviewuid) {
 
     $.ajax({
         type: "DELETE",
         url: "/deleteReview",
         data: {
-            'uid':uid,
+            'uid': uid,
             'reviewuid': reviewuid,
         },
-        success: function (response){
+        success: function (response) {
             reload()
             alert('댓글이 삭제되었습니다')
         }
@@ -103,7 +104,7 @@ function createReview(uid, reviewId, storyId, countId, reviewBoxId) {
             'uid': uid,
             'reviewId': reviewId,
             'content': $('#' + storyId).val(),
-            'user':document.cookie.split(';')[0].split('=')[1]
+            'user': document.cookie.split(';')[0].split('=')[1]
         },
         success: function (response) {
             alert('등록되었습니다')

@@ -83,7 +83,7 @@
             url: "/api/login",
             data: {id_give: id, pw_give: pw},
             success: function (response) {
-                console.log(response)
+
                 if (response['result'] === 'success') {
                     // jwt 토큰을 token_give이라는 키 값으로 쿠키에 저장
                     $.cookie('user', response['user'])

@@ -12,7 +12,7 @@ html, body {
     height: 100%;
 }
 
-.topbar{
+.topbar {
     text-align: right;
     margin-right: 10px;
     color: darkgreen;
@@ -149,15 +149,18 @@ img {
     color: darkseagreen;
     float: right;
 }
-.timestamp{
-    float:right;
+
+.timestamp {
+    float: right;
     font-size: smaller;
     color: gray;
 }
-.deletereview{
-    float:right;
+
+.deletereview {
+    float: right;
     color: gray;
 }
+
 strong {
     color: darkseagreen;
 }

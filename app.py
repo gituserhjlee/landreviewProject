@@ -9,17 +9,17 @@ app = Flask(__name__)
 
 client = MongoClient('mongodb://test:test@localhost', 27017)
 db = client.dbmyproject
-index=0
-userindex=0
+index = 0
+userindex = 0
 # jwt secret key
 SECRET_KEY = 'hello world'
+
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # 쿠키에서 token_give 가져오기
         token_receive = request.cookies.get('token_give')
-        print('token_receive :', token_receive)
 
         if token_receive is not None:
             try:
@@ -40,18 +40,22 @@ def login_required(f):
 
     return decorated_function
 
+
 @app.route('/')
 @login_required
 def home():
-    return render_template('index.html',data=g.user['nick'])
+    return render_template('index.html', data=g.user['nick'])
+
 
 @app.route('/login')
 def login():
     return render_template('login.html')
 
+
 @app.route('/register')
 def register():
     return render_template('register.html')
+
 
 # 회원가입
 @app.route('/api/register', methods=['POST'])
@@ -63,9 +67,10 @@ def api_register():
     # pw를 sha256 방법(단방향)으로 암호화
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
     global userindex
-    db.user.insert_one({'uid':userindex ,'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
-    userindex+=1
+    db.user.insert_one({'uid': userindex, 'id': id_receive, 'pw': pw_hash, 'nick': nickname_receive})
+    userindex += 1
     return jsonify({'result': 'success'})
+
 
 # 로그인
 @app.route('/api/login', methods=['POST'])
@@ -83,12 +88,12 @@ def api_login():
         # jwt 토큰 발급
         payload = {
             'id': id_receive,  # user id
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=300)  # 만료 시간 (10초 뒤 만료)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=300)  # 만료 시간 (300초 뒤 만료)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
         g.user = db.user.find_one({'id': payload["id"]})
 
-        return jsonify({'result': 'success', 'token': token, 'user':g.user['nick']})
+        return jsonify({'result': 'success', 'token': token, 'user': g.user['nick']})
     else:
         return jsonify({'result': 'fail', 'msg': '아이디 또는 비밀번호를 다시 확인하세요 😓'})
 
@@ -100,78 +105,78 @@ def api_valid():
     return jsonify({'result': 'success', 'nickname': g.user['nick']})
 
 
-
 @app.route('/land', methods=['POST'])
 def show_result():
-    gu, dong, name='데이터 없음','데이터 없음','데이터 없음'
+    gu, dong, name = '데이터 없음', '데이터 없음', '데이터 없음'
 
     filters = request.form['opt']
     keyword = request.form['keyword']
     # list(db.dbmyproject.find({"$or":[{'gu': {'$regex':keyword}}, {'dong':{'$regex':keyword}},{'name':{'$regex':keyword}}]})) #필터없이 or로 검색할때
     if filters == '구':
         gu = list(db.dbmyproject.find({'gu': {'$regex': keyword}}, {'_id': False}))
-        gu=sorted(gu, key=(lambda x:x['review']),reverse=True)
+        gu = sorted(gu, key=(lambda x: x['review']), reverse=True)
         mode = 0
 
     elif filters == '동':
-        dong = list(db.dbmyproject.find({'dong': {'$regex':keyword}},{'_id':False}))
-        dong=sorted(dong, key=(lambda x:x['review']),reverse=True)
+        dong = list(db.dbmyproject.find({'dong': {'$regex': keyword}}, {'_id': False}))
+        dong = sorted(dong, key=(lambda x: x['review']), reverse=True)
 
         mode = 1
 
     else:
         name = list(db.dbmyproject.find({'name': {'$regex': keyword}}, {'_id': False}))
-        name=sorted(name, key=(lambda x:x['review']),reverse=True)
+        name = sorted(name, key=(lambda x: x['review']), reverse=True)
 
         mode = 2
 
-    return jsonify({'result': 'success', 'gu': gu, 'dong':dong, 'name':name, 'mode':mode})
+    return jsonify({'result': 'success', 'gu': gu, 'dong': dong, 'name': name, 'mode': mode})
 
 
 @app.route('/review', methods=['POST'])
 def create_review():
-
-
     global index
     reviewuid = index
-    index+=1
-    uid=int(request.form['uid'])
-    user=request.form['user']
-    reviewId=request.form['reviewId']
-    content=request.form['content']
+    index += 1
+    uid = int(request.form['uid'])
+    user = request.form['user']
+    reviewId = request.form['reviewId']
+    content = request.form['content']
 
-    time=datetime.datetime.now()
-    time=time+datetime.timedelta(hours=9)
+    time = datetime.datetime.now()
+    time = time + datetime.timedelta(hours=9)
 
     db.dbmyprojectreview.insert_one(
         {
 
-            'reviewuid':reviewuid,
-            'reviewId':reviewId,
-            'content':content,
-            'last_modified':time,
-            'usernickname':user
+            'reviewuid': reviewuid,
+            'reviewId': reviewId,
+            'content': content,
+            'last_modified': time,
+            'usernickname': user
         }
     )
     db.dbmyproject.update_one({'uid': uid}, {'$inc': {'review': 1}})
-    count=db.dbmyproject.find_one({'uid':uid}, {'_id':False})
-    return jsonify({'result':'success', 'reviewId':reviewId, 'content':content, 'count':count})
+    count = db.dbmyproject.find_one({'uid': uid}, {'_id': False})
+    return jsonify({'result': 'success', 'reviewId': reviewId, 'content': content, 'count': count})
+
 
 @app.route('/reviews', methods=['GET'])
 def show_review():
-    review=request.args.get('reviewId')
-    reviewList=list(db.dbmyprojectreview.find({'reviewId':review}, {'_id':False}))
-    return jsonify({'result':'success', 'reviewList':reviewList})
+    review = request.args.get('reviewId')
+    reviewList = list(db.dbmyprojectreview.find({'reviewId': review}, {'_id': False}))
+    return jsonify({'result': 'success', 'reviewList': reviewList})
 
-@app.route('/deleteReview',methods=['DELETE'])
+
+@app.route('/deleteReview', methods=['DELETE'])
 def delete_review():
-    uid=int(request.form['uid'])
-    reviewuid=int(request.form['reviewuid'])
+    uid = int(request.form['uid'])
+    reviewuid = int(request.form['reviewuid'])
 
     db.dbmyprojectreview.delete_one({'reviewuid': reviewuid})
     db.dbmyproject.update_one({'uid': uid}, {'$inc': {'review': -1}})
 
-    return jsonify({'result':'success'})
+    return jsonify({'result': 'success'})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
