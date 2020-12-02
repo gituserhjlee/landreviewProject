@@ -2,14 +2,14 @@
 
 <!-- content -->
 {% block content %}
-<h1 class="header">Sign In</h1>
+<h1 class="header">로그인</h1>
 <div class="body">
     <!-- ID -->
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text label">ID</span>
         </div>
-        <input type="text" class="form-control" id="id" placeholder="please enter your id" aria-label="id"
+        <input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요" aria-label="id"
                aria-describedby="id">
     </div>
     <!-- PW -->
@@ -17,16 +17,16 @@
         <div class="input-group-prepend">
             <span class="input-group-text label">PW</span>
         </div>
-        <input type="password" class="form-control" id="pw" placeholder="please enter your password" aria-label="pw"
+        <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력하세요" aria-label="pw"
                aria-describedby="pw">
     </div>
 </div>
 <div class="footer">
     <!-- Sign In -->
-    <button class="btn btn-primary sign-in" onclick="login()">Sign In</button>
+    <button class="btn btn-outline-success sign-in" onclick="login()">로그인</button>
 
     <!-- Sign Up -->
-    <a class="sign-up" href="/register">Sign Up</a>
+    <a class="sign-up" href="/register">회원가입 </a>
 </div>
 {% endblock %}
 
@@ -36,6 +36,12 @@
     .header {
         text-align: center;
         margin-bottom: 32px;
+    }
+
+    h1 {
+        color: darkgreen;
+        text-shadow: 3px 3px 0px darkseagreen;
+
     }
 
     .body {
@@ -51,12 +57,17 @@
         text-align: right;
     }
 
+    a {
+        color: darkgreen;
+    }
+
     .label {
         width: 50px;
         text-align: center;
         display: flex;
         justify-content: center;
     }
+
 </style>
 {% endblock %}
 
@@ -77,9 +88,8 @@
                     // jwt 토큰을 token_give이라는 키 값으로 쿠키에 저장
                     $.cookie('user', response['user'])
                     $.cookie('token_give', response['token'])
-                    let nickname=response['user']
-                    // console.log(document.cookie.split(';')[0].split('=')[1])
-                    alert(nickname+'님 반갑습니다' +'Login Success 👍')
+                    let nickname = response['user']
+                    alert(nickname + '님 반갑습니다 ' + '로그인 성공 👍')
                     location.href = '/'
                 } else {
                     // 로그인이 안되면 에러메시지를 띄웁니다.

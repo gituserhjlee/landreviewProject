@@ -2,14 +2,14 @@
 
 <!-- content -->
 {% block content %}
-<h1 class="header">Sign Up</h1>
+<h1 class="header">회원가입</h1>
 <div class="body">
     <!-- ID -->
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text label">ID</span>
         </div>
-        <input type="text" class="form-control" id="id" placeholder="please enter your id" aria-label="id"
+        <input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요" aria-label="id"
                aria-describedby="id">
     </div>
     <!-- PW -->
@@ -17,7 +17,7 @@
         <div class="input-group-prepend">
             <span class="input-group-text label">PW</span>
         </div>
-        <input type="password" class="form-control" id="pw" placeholder="please enter your password" aria-label="pw"
+        <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력하세요" aria-label="pw"
                aria-describedby="pw">
     </div>
     <!-- Nickname -->
@@ -25,13 +25,13 @@
         <div class="input-group-prepend">
             <span class="input-group-text label">Nickname</span>
         </div>
-        <input type="text" class="form-control" id="nickname" placeholder="please enter your nickname" aria-label="pw"
+        <input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력하세요" aria-label="pw"
                aria-describedby="nickname">
     </div>
 </div>
 <div class="footer">
     <!-- Sign Up -->
-    <button class="btn btn-primary sign-up" onclick="signUp()">Sign Up</button>
+    <button class="btn btn-outline-success sign-up" onclick="signUp()">Sign Up</button>
 </div>
 {% endblock %}
 
@@ -73,9 +73,9 @@
         let pw = $('#pw').val()
         let nickname = $('#nickname').val()
 
-        if (id === '') return alert('please write your id')
-        if (pw === '') return alert('please write your password')
-        if (nickname === '') return alert('please write your nickname')
+        if (id === '') return alert('아이디를 입력하세요')
+        if (pw === '') return alert('비밀번호를 입력하세요')
+        if (nickname === '') return alert('닉네임을 입력하세요')
 
         $.ajax({
             type: "POST",
@@ -83,7 +83,7 @@
             data: {id_give: id, pw_give: pw, nickname_give: nickname},
             success: function (response) {
                 if (response['result'] === 'success') {
-                    alert('🎉 Sign up is complete 🎉')
+                    alert('🎉 회원가입이 완료되었습니다 🎉')
                     location.href = '/login'
                 } else {
                     alert(response['msg'])

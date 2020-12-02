@@ -9,6 +9,10 @@ $(document).ready(function () {
 function reload() {
     window.location.reload()
 }
+function logout(){
+    document.cookie='token_give=None'
+    reload()
+}
 
 function showReview(uid,reviewId, reviewListId) {
     $('#' + reviewListId).empty()
@@ -44,7 +48,6 @@ function showReview(uid,reviewId, reviewListId) {
                                     $('#' + reviewListId).append(temp)
 
                 }
-                // $('#' + reviewListId).append(temp)
             }
         }
     })

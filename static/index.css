@@ -12,6 +12,12 @@ html, body {
     height: 100%;
 }
 
+.topbar{
+    text-align: right;
+    margin-right: 10px;
+    color: darkgreen;
+}
+
 .nav {
     display: flex;
     flex-direction: column;

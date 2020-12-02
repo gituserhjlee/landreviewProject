@@ -7,7 +7,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, g
 
 app = Flask(__name__)
 
-client = MongoClient('localhost', 27017)
+client = MongoClient('mongodb://test:test@localhost', 27017)
 db = client.dbmyproject
 index=0
 userindex=0
@@ -83,14 +83,14 @@ def api_login():
         # jwt 토큰 발급
         payload = {
             'id': id_receive,  # user id
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=10)  # 만료 시간 (10초 뒤 만료)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=300)  # 만료 시간 (10초 뒤 만료)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
         g.user = db.user.find_one({'id': payload["id"]})
 
         return jsonify({'result': 'success', 'token': token, 'user':g.user['nick']})
     else:
-        return jsonify({'result': 'fail', 'msg': 'Please check your id and password 😓'})
+        return jsonify({'result': 'fail', 'msg': '아이디 또는 비밀번호를 다시 확인하세요 😓'})
 
 
 # 유저 닉네임 조회
